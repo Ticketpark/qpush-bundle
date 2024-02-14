@@ -123,6 +123,10 @@ class UecodeQPushExtension extends Extension
                 }
             }
 
+            if ($isProviderAWS) {
+                $definition->setLazy(true);
+            }
+
             $name = sprintf('uecode_qpush.%s', $queue);
             $container->setDefinition($name, $definition);
 
