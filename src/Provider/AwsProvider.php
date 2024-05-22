@@ -373,9 +373,9 @@ class AwsProvider extends AbstractProvider
     public function createQueue()
     {
         $attributes = [
-            'VisibilityTimeout'             => $this->options['message_timeout'],
-            'MessageRetentionPeriod'        => $this->options['message_expiration'],
-            'ReceiveMessageWaitTimeSeconds' => $this->options['receive_wait_time']
+            'VisibilityTimeout'             => (string) $this->options['message_timeout'],
+            'MessageRetentionPeriod'        => (string) $this->options['message_expiration'],
+            'ReceiveMessageWaitTimeSeconds' => (string) $this->options['receive_wait_time']
         ];
 
         if ($this->isQueueFIFO()) {
