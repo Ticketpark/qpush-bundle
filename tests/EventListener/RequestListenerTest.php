@@ -22,6 +22,7 @@
 
 namespace Uecode\Bundle\QPushBundle\Tests\EventListener;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Uecode\Bundle\QPushBundle\EventListener\RequestListener;
 use Uecode\Bundle\QPushBundle\Event\Events as QPushEvents;
 use Uecode\Bundle\QPushBundle\Event\NotificationEvent;
@@ -48,6 +50,11 @@ class RequestListenerTest extends TestCase
      * @var MockInterface
      */
     protected $event;
+
+    /**
+     * @var KernelInterface|MockObject
+     */
+    private $kernel;
 
     public function setUp(): void
     {

@@ -44,8 +44,8 @@ class SyncProviderTest extends TestCase
             ->expects($this->once())
             ->method('dispatch')
             ->with(
+                new IsInstanceOf('Uecode\Bundle\QPushBundle\Event\MessageEvent'),
                 Events::Message($this->provider->getName()),
-                new IsInstanceOf('Uecode\Bundle\QPushBundle\Event\MessageEvent')
             );
 
         $this->provider->publish(['foo' => 'bar']);

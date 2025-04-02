@@ -44,7 +44,7 @@ class UecodeQPushExtension extends Extension
      *
      * @throws RuntimeException|InvalidArgumentException|ServiceNotFoundException
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -145,7 +145,7 @@ class UecodeQPushExtension extends Extension
      *
      * @return Reference
      */
-    private function createAwsClient($config, ContainerBuilder $container, $name)
+    private function createAwsClient($config, ContainerBuilder $container, $name): Reference
     {
         $service = sprintf('uecode_qpush.provider.%s', $name);
 
@@ -197,7 +197,7 @@ class UecodeQPushExtension extends Extension
     /**
      * @return Reference
      */
-    private function createSyncClient()
+    private function createSyncClient(): Reference
     {
         return new Reference('event_dispatcher');
     }
@@ -207,7 +207,7 @@ class UecodeQPushExtension extends Extension
      *
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'uecode_qpush';
     }

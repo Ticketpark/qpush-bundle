@@ -22,6 +22,9 @@
 
 namespace Uecode\Bundle\QPushBundle\DependencyInjection;
 
+use InvalidArgumentException;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -30,7 +33,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('uecode_qpush');
 
@@ -45,7 +48,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function getProvidersNode()
+    private function getProvidersNode(): ArrayNodeDefinition|NodeDefinition
     {
         $treeBuilder    = new TreeBuilder('providers');
         $requirements   = [
@@ -103,7 +106,7 @@ class Configuration implements ConfigurationInterface
                 ->then(function (array $provider) use ($node, $requirements) {
                     foreach ($requirements[$provider['driver']] as $requirement) {
                         if (empty($provider[$requirement])) {
-                            throw new \InvalidArgumentException(
+                            throw new InvalidArgumentException(
                                 sprintf('%s queue providers must have a %s; none provided', $provider['driver'], $requirement)
                             );
                         }
@@ -117,7 +120,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    private function getQueuesNode()
+    private function getQueuesNode(): ArrayNodeDefinition|NodeDefinition
     {
         $treeBuilder = new TreeBuilder('queues');
         $node = $treeBuilder->getRootNode();
@@ -204,7 +207,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
 
-    private function getSubscribersNode()
+    private function getSubscribersNode(): ArrayNodeDefinition|NodeDefinition
     {
         $treeBuilder = new TreeBuilder('subscribers');
         $node = $treeBuilder->getRootNode();
