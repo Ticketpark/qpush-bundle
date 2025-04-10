@@ -40,22 +40,4 @@ class UecodeQPushBundle extends Bundle
         // Setting extension to bypass alias convention check
         $this->extension = new UecodeQPushExtension();
     }
-
-    /**
-     * Adds the Compiler Passes for the QPushBundle
-     *
-     * @param ContainerBuilder $container
-     */
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(
-            new RegisterListenersPass(
-                'event_dispatcher',
-                'uecode_qpush.event_listener',
-                'uecode_qpush.event_subscriber'
-            )
-        );
-    }
 }

@@ -106,7 +106,7 @@ services:
     my_example_service:
     	class: My\Bundle\ExampleBundle\Service\ExampleService
     	tags:
-    		- { name: uecode_qpush.event_listener, event: my_queue_key.message_received, method: onMessageReceived }
+    		- { name: kernel.event_listener, event: my_queue_key.message_received, method: onMessageReceived }
 ```
 
 ###### Example

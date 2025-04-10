@@ -87,7 +87,7 @@ class UecodeQPushExtension extends Extension
             $definition->setPublic(true);
             $definition
                 ->addTag(
-                    'uecode_qpush.event_listener',
+                    'kernel.event_listener',
                     [
                         'event' => "{$queue}.on_notification",
                         'method' => "onNotification",
@@ -95,7 +95,7 @@ class UecodeQPushExtension extends Extension
                     ]
                 )
                 ->addTag(
-                    'uecode_qpush.event_listener',
+                    'kernel.event_listener',
                     [
                         'event' => "{$queue}.message_received",
                         'method' => "onMessageReceived",
@@ -108,7 +108,7 @@ class UecodeQPushExtension extends Extension
 
             if ($isQueueNameSet && $isProviderAWS) {
                 $definition->addTag(
-                    'uecode_qpush.event_listener',
+                    'kernel.event_listener',
                     [
                         'event' => "{$values['options']['queue_name']}.on_notification",
                         'method' => "onNotification",
