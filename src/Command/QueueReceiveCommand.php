@@ -26,36 +26,24 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Uecode\Bundle\QPushBundle\Event\Events;
 use Uecode\Bundle\QPushBundle\Event\MessageEvent;
+use Uecode\Bundle\QPushBundle\Provider\ProviderRegistry;
 
 /**
  * @author Keith Kirk <kkirk@undergroundelephant.com>
  */
-class QueueReceiveCommand extends Command implements ContainerAwareInterface
+class QueueReceiveCommand extends Command
 {
-    /**
-     * @var ContainerInterface
-     *
-     * @api
-     */
-    protected $container;
-
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     protected $output;
+
+    public function __construct(
+        private readonly ProviderRegistry $registry,
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -74,16 +62,15 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
-        $registry = $this->container->get('uecode_qpush');
 
         $name = $input->getArgument('name');
 
         if (null !== $name) {
-            return (int) $this->pollQueue($registry, $name);
+            return (int) $this->pollQueue($this->registry, $name);
         }
 
-        foreach ($registry->all() as $queue) {
-            $this->pollQueue($registry, $queue->getName());
+        foreach ($this->registry->all() as $queue) {
+            $this->pollQueue($this->registry, $queue->getName());
         }
 
         return 0;
@@ -97,13 +84,12 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
             );
         }
 
-        $dispatcher = $this->container->get('event_dispatcher');
-        $messages   = $registry->get($name)->receive();
+        $messages = $registry->get($name)->receive();
 
-        if($messages) {
+        if ($messages) {
             foreach ($messages as $message) {
                 $messageEvent = new MessageEvent($name, $message);
-                $dispatcher->dispatch($messageEvent, Events::Message($name));
+                $this->dispatcher->dispatch($messageEvent, Events::Message($name));
             }
         }
 

@@ -17,20 +17,29 @@ services:
     ### QPush Commands
     uecode_qpush.build_command:
         class: Uecode\Bundle\QPushBundle\Command\QueueBuildCommand
+        arguments:
+            - '@uecode_qpush.registry'
         tags:
              - { name: console.command }
 
     uecode_qpush.destroy_command:
         class: Uecode\Bundle\QPushBundle\Command\QueueDestroyCommand
+        arguments:
+            - '@uecode_qpush.registry'
         tags:
              - { name: console.command }
 
     uecode_qpush.publish_command:
         class: Uecode\Bundle\QPushBundle\Command\QueuePublishCommand
+        arguments:
+            - '@uecode_qpush.registry'
         tags:
              - { name: console.command }
 
     uecode_qpush.receive_command:
         class: Uecode\Bundle\QPushBundle\Command\QueueReceiveCommand
+        arguments:
+            - '@uecode_qpush.registry'
+            - '@event_dispatcher'
         tags:
              - { name: console.command }

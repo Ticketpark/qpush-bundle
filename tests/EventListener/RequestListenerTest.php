@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Uecode\Bundle\QPushBundle\EventListener\RequestListener;
 use Uecode\Bundle\QPushBundle\Event\Events as QPushEvents;
@@ -90,7 +89,7 @@ class RequestListenerTest extends TestCase
         $request = new Request([],[],[],[],[],[], json_encode($message));
         $request->headers->set('x-amz-sns-message-type', 'Notification');
 
-        $event = new RequestEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST);
         $this->dispatcher->dispatch($event, KernelEvents::REQUEST);
 
         $this->assertTrue($event->hasResponse());
@@ -135,7 +134,7 @@ class RequestListenerTest extends TestCase
         $request = new Request([],[],[],[],[],[], json_encode($message));
         $request->headers->set('x-amz-sns-message-type', 'SubscriptionConfirmation');
 
-        $event = new RequestEvent($this->kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST);
         $this->dispatcher->dispatch($event, KernelEvents::REQUEST);
 
         $this->assertTrue($event->hasResponse());

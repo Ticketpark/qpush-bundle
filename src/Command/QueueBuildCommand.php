@@ -26,34 +26,19 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Uecode\Bundle\QPushBundle\Provider\ProviderRegistry;
 
 /**
  * @author Keith Kirk <kkirk@undergroundelephant.com>
  */
-class QueueBuildCommand extends Command implements ContainerAwareInterface
+class QueueBuildCommand extends Command
 {
-    /**
-     * @var ContainerInterface
-     *
-     * @api
-     */
-    protected $container;
-
-    /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     *
-     * @api
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
     protected $output;
+
+    public function __construct(private readonly ProviderRegistry $registry)
+    {
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -72,16 +57,15 @@ class QueueBuildCommand extends Command implements ContainerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
-        $registry = $this->container->get('uecode_qpush');
 
         $name = $input->getArgument('name');
 
         if (null !== $name) {
-            return (int) $this->buildQueue($registry, $name);
+            return (int) $this->buildQueue($this->registry, $name);
         }
 
-        foreach ($registry->all() as $queue) {
-            $this->buildQueue($registry, $queue->getName());
+        foreach ($this->registry->all() as $queue) {
+            $this->buildQueue($this->registry, $queue->getName());
         }
 
         return 0;
